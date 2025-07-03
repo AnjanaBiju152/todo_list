@@ -2,54 +2,282 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TODO</title>
-    <link rel="shortcut icon" href="https://tse3.mm.bing.net/th?id=OIP.D3cuTkI5Cgn_NXc1RGrLvAHaEK&pid=Api&P=0&h=180"
-        type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TODO List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+    }
+
+    .todo-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px 35px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .todo-container h2 {
+      text-align: center;
+      color: #2d3748;
+      margin-bottom: 35px;
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .todo-input {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .todo-input input {
+      flex: 1;
+      border-radius: 12px;
+      padding: 15px 18px;
+      border: 2px solid #e2e8f0;
+      font-size: 16px;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .todo-input input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .todo-input button {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .todo-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    ol.todo-list {
+      list-style: none;
+      counter-reset: todo-counter;
+      margin: 0;
+      padding: 0;
+    }
+
+    .todo-list li {
+      counter-increment: todo-counter;
+      background: white;
+      padding: 18px 20px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f7fafc;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .todo-list li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .todo-list li::before {
+      content: counter(todo-counter);
+      position: absolute;
+      left: -45px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .todo-list {
+      margin-left: 50px;
+    }
+
+    .todo-text {
+      flex: 1;
+      color: #2d3748;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .delete-btn {
+      color: #e53e3e;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .delete-btn:hover {
+      background: rgba(229, 62, 62, 0.1);
+      color: #c53030;
+      transform: scale(1.1);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #a0aec0;
+      font-style: italic;
+      margin-top: 40px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 576px) {
+      .todo-container {
+        padding: 30px 25px;
+        margin: 10px;
+      }
+      
+      .todo-list {
+        margin-left: 40px;
+      }
+      
+      .todo-list li::before {
+        left: -35px;
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <h3 class="text-primary mt-5 text-center">TODO LIST</h3>
-                <form action="" class="mt-5 d-flex">
-                    <input type="text" placeholder="add todo item" class="form-control" id="todoData">
-                    <button class="btn btn-success ms-3" onclick="addItem()" type="button">ADD TODO </button>
-                </form>
-            </div>
-            <div class="col-md-3"></div>
-        </div>
-        <!-- listing part -->
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6 border border-3 border-primary rounded mt-5">
-                <h4 class="text-warning text-center mb-5 mt-3"> LIST OF TODO ITEMS</h4>
-                <ol id="todoList">
+  <div class="todo-container">
+    <h2><i class="fas fa-check-circle"></i> My TODO List</h2>
+    <form onsubmit="event.preventDefault(); addItem();" class="todo-input">
+      <input type="text" id="todoData" placeholder="What needs to be done?" />
+      <button type="submit">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </form>
+    <ol id="todoList" class="todo-list">
+      <div id="emptyState" class="empty-state">
+        <i class="fas fa-clipboard-list"></i><br>
+        No tasks yet. Add one above to get started!
+      </div>
+    </ol>
+  </div>
 
-                </ol>
-            </div>
-            <div class="col-md-3"></div>
-        </div>
-    </div>
-    <script>
-        function addItem() {
+  <script>
+    function addItem() {
+      const input = document.getElementById("todoData");
+      const list = document.getElementById("todoList");
+      const emptyState = document.getElementById("emptyState");
+      const value = input.value.trim();
 
-            if (todoData.value) {
-                var todoItem = todoData.value;
-                todoList.innerHTML = todoList.innerHTML + `<li>${todoItem}</li>`
-                todoData.value ="";
-            }
-            else {
-                alert("please add something")
-            }
+      if (value) {
+        
+        if (emptyState) {
+          emptyState.style.display = 'none';
         }
-    </script>
+
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <span class="todo-text">${value}</span>
+          <button class="delete-btn" onclick="deleteItem(this)" title="Delete task">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        `;
+        list.appendChild(li);
+        input.value = "";
+        
+        
+        li.style.opacity = '0';
+        li.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          li.style.transition = 'all 0.3s ease';
+          li.style.opacity = '1';
+          li.style.transform = 'translateY(0)';
+        }, 10);
+      } else {
+
+        input.style.borderColor = '#e53e3e';
+        input.style.boxShadow = '0 0 0 3px rgba(229, 62, 62, 0.1)';
+        setTimeout(() => {
+          input.style.borderColor = '#e2e8f0';
+          input.style.boxShadow = 'none';
+        }, 2000);
+      }
+    }
+
+    function deleteItem(btn) {
+      const li = btn.parentElement;
+      const list = document.getElementById("todoList");
+      const emptyState = document.getElementById("emptyState");
+      
+      
+      li.style.transform = 'translateX(100%)';
+      li.style.opacity = '0';
+      
+      setTimeout(() => {
+        li.remove();
+        
+        
+        if (list.children.length === 1) { 
+          emptyState.style.display = 'block';
+        }
+      }, 300);
+    }
+
+    
+    document.getElementById("todoData").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        addItem();
+      }
+    });
+  </script>
 </body>
 
 </html>
